@@ -41,12 +41,12 @@ def dpsa(records):
     for year, number, url in sorted(set(found), reverse=True)[:3]:
         if not dt.date.today().year - 1 <= year <= dt.date.today().year:
             continue
-        records[url] = make(f"Public Service Vacancy Circular {number} of {year}", url, "Jobs", "Department of Public Service and Administration", "Official government vacancy circular. Check individual advertisements and their closing dates.")
+        records[url] = {**make(f"Public Service Vacancy Circular {number} of {year}", url, "Jobs", "Department of Public Service and Administration", "Official government vacancy circular directory. Check each advertised vacancy and closing date."), "type": "directory"}
 
 def funza(records):
     html = load(FUNZA)
     if dt.date.today() <= dt.date(2027, 1, 31) and "2027" in html and "31/01/2027" in html:
-        records[FUNZA] = make("Funza Lushaka Teaching Bursary 2027", FUNZA, "Bursaries", "Department of Basic Education", "New applications close 31 January 2027. Returning bursars close 30 November 2026. Check the official site for conditions.", "2027-01-31")
+        records[FUNZA] = {**make("Funza Lushaka Teaching Bursary 2027", FUNZA, "Bursaries", "Department of Basic Education", "New applications close 31 January 2027. Returning bursars close 30 November 2026. Check the official site for conditions.", "2027-01-31"), "type": "information"}
 
 def feeds(records):
     for feed in json.loads(os.getenv("OFFICIAL_FEEDS_JSON") or "[]"):
@@ -61,7 +61,7 @@ def feeds(records):
                     atom = node.find("{http://www.w3.org/2005/Atom}link")
                     if atom is not None: link = atom.get("href", "")
                 if title and urlsplit(link).scheme == "https":
-                    records[link] = make(title[:180], link, category, feed.get("organization", "Official publisher"), "See official publisher for full details and closing dates.")
+                    records[link] = {**make(title[:180], link, category, feed.get("organization", "Official publisher"), "See official publisher for full details and closing dates."), "type": "information"}
         except Exception as error:
             print("Feed failed:", url, error)
 
@@ -76,6 +76,11 @@ def main():
             print(name, "failed:", error)
     today = dt.date.today().isoformat()
     records = {url: item for url, item in records.items() if not item.get("deadline") or item["deadline"] >= today}
+    # Keep only the newest 3 DPSA circulars; individual vacancy deadlines differ.
+    dpsa_urls = sorted(((int(m.group(2)), int(m.group(1)), url) for url in records if (m := re.search(r"/circular-(\\d+)-of-(20\\d{2})/?$", url))), reverse=True)
+    for _, _, url in dpsa_urls[3:]:
+        records.pop(url, None)
+    # Preserve checked official directory links. Failures do not wipe previous data.
     OUT.write_text(json.dumps({"updated": today, "items": list(records.values())[:500]}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 if __name__ == "__main__":
