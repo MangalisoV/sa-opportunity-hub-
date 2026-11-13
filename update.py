@@ -77,7 +77,7 @@ def main():
     today = dt.date.today().isoformat()
     records = {url: item for url, item in records.items() if not item.get("deadline") or item["deadline"] >= today}
     # Keep only the newest 3 DPSA circulars; individual vacancy deadlines differ.
-    dpsa_urls = sorted(((int(m.group(2)), int(m.group(1)), url) for url in records if (m := re.search(r"/circular-(\\d+)-of-(20\\d{2})/?$", url))), reverse=True)
+    dpsa_urls = sorted(((int(m.group(2)), int(m.group(1)), url) for url in records if (m := re.search(r"/circular-(\d+)-of-(20\d{2})/?$", url))), reverse=True)
     for _, _, url in dpsa_urls[3:]:
         records.pop(url, None)
     # Preserve checked official directory links. Failures do not wipe previous data.
