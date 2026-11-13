@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://mangalisov.github.io/sa-opportunity-hub-/sitemap.xml
