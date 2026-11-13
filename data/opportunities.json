@@ -7,7 +7,8 @@
       "category": "Jobs",
       "organization": "Department of Public Service and Administration",
       "description": "Published 13 November 2026. Government vacancies across multiple departments. Check individual advertised jobs and closing dates.",
-      "deadline": ""
+      "deadline": "",
+      "type": "directory"
     },
     {
       "title": "Funza Lushaka Teaching Bursary 2027",
@@ -15,7 +16,8 @@
       "category": "Bursaries",
       "organization": "Department of Basic Education",
       "description": "New applications close 31 January 2027; returning bursars close 30 November 2026. Check eligibility and apply through the official portal.",
-      "deadline": "2027-01-31"
+      "deadline": "2027-01-31",
+      "type": "information"
     },
     {
       "title": "National Treasury eTender portal — browse tenders",
@@ -23,7 +25,8 @@
       "category": "Tenders",
       "organization": "National Treasury",
       "description": "Official tender search portal. This is a directory link, not an individual tender listing; verify all closing dates on the official portal.",
-      "deadline": ""
+      "deadline": "",
+      "type": "directory"
     }
   ]
 }
